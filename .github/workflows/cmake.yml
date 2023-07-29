@@ -20,26 +20,52 @@ jobs:
     steps:
     - uses: actions/checkout@v3
     
-    - name: Install dependencies
-      run: sudo apt-get install qt5-default
-      
-#     - name: Install Qt5/Qt6 (yaqti)
-#       # You may pin to the exact commit or the version.
-#       # uses: WillBrennan/yaqti@8182822afd102e931137d71da54f52a13597af8d
-#       uses: WillBrennan/yaqti@2021.07.29
-#       with:
-#         # Qt version to pick 5.15.2 or 6.2.1
-#         version: 5.15.2
-#         # install os; linux, windows, or mac
-#         os: linux
-#         # what platform are you installing for? desktop, winrt, android, or ios
-#         platform: desktop
-#         # what optional Qt modules to install? qtcharts, qtnetworkauth ect...
-#         modules: qtquick3d
+    - name: Install Qt
+      # You may pin to the exact commit or the version.
+      # uses: jurplel/install-qt-action@2d518188e746defd451af981c3c901f463d99e29
+      uses: jurplel/install-qt-action@v3.2.1
+      with:
+        # Directory to install Qt
+        dir: ${{github.workspace}}/src/qt/ # optional
+        # Version of Qt to install
+        version: 5.15.2 # optional, default is 5.15.2
+        # Host platform
+        host: linux # optional
+        # Target platform for build
+        target: desktop # optional, default is desktop
+        # Architecture for Windows/Android
+#         arch: # optional
+        # Whether or not to install Qt dependencies on Linux
+        install-deps: true # optional, default is true
+        # Additional Qt modules to install
+#         modules: # optional
+        # Specify which Qt archive to install
+#         archives: # optional
+        # Whether or not to cache Qt automatically
+#         cache: # optional
+        # Cache key prefix for automatic cache
+#         cache-key-prefix: # optional, default is install-qt-action
+        # Whether or not to automatically run setup-python to find a valid python version.
+#         setup-python: # optional, default is true
+        # Qt tools to download -- specify comma-separated argument lists which are themselves separated by spaces: <tool_name>,<tool_version>,<tool_arch>
+
+#         tools: # optional
+        # Whether or not to set environment variables after running aqtinstall
+        set-env: true # optional, default is true
+        # Whether or not to actually install Qt or just the tools from the tools argument
+#         tools-only: # optional
+        # Version of aqtinstall to use in case of issues
+#         aqtversion: # optional, default is ==2.1.*
+        # Version of py7zr to use in case of issues
+#         py7zrversion: # optional, default is ==0.19.*
+        # Any extra arguments to append to the back
+#         extra: # optional
 
     - name: Configure CMake
       # Configure CMake in a 'build' subdirectory. `CMAKE_BUILD_TYPE` is only required if you are using a single-configuration generator such as make.
       # See https://cmake.org/cmake/help/latest/variable/CMAKE_BUILD_TYPE.html?highlight=cmake_build_type
+      env:
+        CMAKE_PREFIX_PATH: ${{env.Qt5_Dir}}
       working-directory: ${{github.workspace}}/src
       run: cmake -B ./build -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}}
 
